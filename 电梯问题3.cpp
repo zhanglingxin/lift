@@ -37,14 +37,15 @@ int main()
  /* get request : 5 inputs */
  int cot1=0,cot2=0;
  int cota[5]={0},cotb[5]={0};
- printf("input:(5 input,for example: 0 1 2    0 8 1   1 2 3   1 2 5   3 1 0)\n");
+ //printf("input:(5 input,for example: 0 1 2    0 8 1   1 2 3   1 2 5   3 1 0)\n");
+ FILE *fpRead=fopen("input.txt","r");  
  for(i=0;i<5;i++)
  {
  	for(j=0;j<3;j++)
  	{
  		if(j<2)
- 		scanf("%d ",&in[i][j]);
- 		else scanf("%d",&in[i][j]);
+ 		fscanf(fpRead,"%d ",&in[i][j]);
+ 		else fscanf(fpRead,"%d",&in[i][j]);
 	 }
   } 
   for(i=0;i<5;i++)
@@ -136,15 +137,44 @@ else if(cot1!=0&&cot2==0)
 	pickup(passengerFloor,targetFloor,requestTime,&time,&floor);
 leastCost=time;	
 }
- 
- printf("the best pick time cost is:%d\n",leastCost);
+ FILE *fpWrite=fopen("output.txt","w"); 
+ //fprintf(fpWrite,"the best pick time cost is:%d\n",leastCost);
+ printf("%s",input[pickupOrder[leastCostPickup][i]]);
+ char arr[5][100]={'\0'};int arrr[5]={'\0'};
  for(i=0;i<5;i++)
  {
-  printf("%d[%s] ",pickupOrder[leastCostPickup][i],input[pickupOrder[leastCostPickup][i]]);
-
+ 	 arrr[i]=atoi(input[pickupOrder[leastCostPickup][i]]);
  } 
 
+ /*for (i=0;i<5;i++)
+ {
+ 	arrr[i]=atoi(arr[i]);
+ }*/
+struct elevator
+{
+	int time;
+	int begin;
+	int end;
+}ele[5];
 
+for (i=0;i<5;i++)
+{
+	ele[i].time=arrr[i]/100;
+	ele[i].begin=arrr[i]/10%10;
+ 	ele[i].end=arrr[i]%10;
+}
+int sumtime=0;
+sumtime=ele[0].begin;
+for (i=0;i<5;i++)
+{
+	if (ele[i].time>sumtime)
+	{
+		sumtime+=abs(ele[i].time-sumtime)+1;
+	 } 
+	fprintf(fpWrite,"%d时，停靠在%d楼\n",sumtime,ele[i].begin);
+	sumtime+=abs(ele[i].end-ele[i].begin)+1;
+	fprintf(fpWrite,"%d时，停靠在%d楼\n",sumtime,ele[i].end);
+}
  return 0;
 
  } 
